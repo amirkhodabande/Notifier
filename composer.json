@@ -3,5 +3,15 @@
     "description": "A package to manage notifications.",
     "require-dev": {
         "orchestra/testbench": "^7.17"
+    },
+    "autoload": {
+        "psr-4": {
+            "Amir\\Notifier\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Amir\\Notifier\\Tests\\": "tests/"
+        }
     }
 }
