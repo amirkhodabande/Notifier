@@ -1,13 +1,14 @@
 <?php
 
 use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableMessage;
 use Amir\Notifier\Services\Notification;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Orchestra\Testbench\TestCase;
 
-class EmailServiceTest extends TestCase
+class NotificationServiceTest extends TestCase
 {
     /** @test */
     public function user_can_send_email()
@@ -28,6 +29,28 @@ class EmailServiceTest extends TestCase
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
         $result = (new Notification())->send($mailChannel, $message);
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function user_can_send_sms()
+    {
+        $smsChannel = (new SMSChannel());
+        $message = (new NotifiableMessage())->setMessage([
+            'message' => 'test message'
+        ]);
+
+        Http::shouldReceive('retry')
+            ->once()
+            ->with($smsChannel->getRetryTime(), $smsChannel->getSleepTime())
+            ->andReturnSelf();
+        Http::shouldReceive('post')
+            ->once()
+            ->with($smsChannel->getUrl(), $message->getMessage())
+            ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
+
+        $result = (new Notification())->send($smsChannel, $message);
 
         $this->assertTrue($result);
     }
