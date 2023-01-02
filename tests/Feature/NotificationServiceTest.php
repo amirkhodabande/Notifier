@@ -15,7 +15,7 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_email()
     {
-        $mailChannel = resolve(MailChannel::class);
+        $mailChannel = resolve(MailChannel::class)->setReceiver('test@mail.com');
         $message = resolve(NotifiableMessage::class)->setMessage([
             'subject' => 'test subject',
             'message' => 'test message'
@@ -27,7 +27,10 @@ class NotificationServiceTest extends TestCase
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
-            ->with($mailChannel->getUrl(), $message->getMessage())
+            ->with(
+                $mailChannel->getUrl(),
+                array_merge($mailChannel->getReceiver(), $message->getMessage())
+            )
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
         $result = resolve(Notification::class)->send($mailChannel, $message);
@@ -38,7 +41,7 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_sms()
     {
-        $smsChannel = resolve(SMSChannel::class);
+        $smsChannel = resolve(SMSChannel::class)->setReceiver('09331234567');
         $message = resolve(NotifiableMessage::class)->setMessage([
             'message' => 'test message'
         ]);
@@ -49,7 +52,10 @@ class NotificationServiceTest extends TestCase
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
-            ->with($smsChannel->getUrl(), $message->getMessage())
+            ->with(
+                $smsChannel->getUrl(),
+                array_merge($smsChannel->getReceiver(), $message->getMessage())
+            )
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
         $result = resolve(Notification::class)->send($smsChannel, $message);

@@ -13,8 +13,9 @@ class Notification
         try {
             Http::retry($notifiableChannel->getRetryTime(), $notifiableChannel->getSleepTime())->post(
                 $notifiableChannel->getUrl(),
-                $notifiableMessage->getMessage()
+                array_merge($notifiableChannel->getReceiver(), $notifiableMessage->getMessage())
             );
+
             return true;
         } catch (\Exception $exception) {
 //            TODO: error handling

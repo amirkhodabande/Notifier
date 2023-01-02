@@ -9,4 +9,8 @@ interface NotifiableChannelInterface
     public function getRetryTime(): int;
 
     public function getSleepTime(): int;
+
+    public function getReceiver(): array;
+
+    public function setReceiver(string $receiver): self;
 }
