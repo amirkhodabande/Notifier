@@ -13,8 +13,8 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_email()
     {
-        $mailChannel = (new MailChannel());
-        $message = (new NotifiableMessage())->setMessage([
+        $mailChannel = resolve(MailChannel::class);
+        $message = resolve(NotifiableMessage::class)->setMessage([
             'subject' => 'test subject',
             'message' => 'test message'
         ]);
@@ -28,7 +28,7 @@ class NotificationServiceTest extends TestCase
             ->with($mailChannel->getUrl(), $message->getMessage())
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
-        $result = (new Notification())->send($mailChannel, $message);
+        $result = resolve(Notification::class)->send($mailChannel, $message);
 
         $this->assertTrue($result);
     }
@@ -36,8 +36,8 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_sms()
     {
-        $smsChannel = (new SMSChannel());
-        $message = (new NotifiableMessage())->setMessage([
+        $smsChannel = resolve(SMSChannel::class);
+        $message = resolve(NotifiableMessage::class)->setMessage([
             'message' => 'test message'
         ]);
 
@@ -50,7 +50,7 @@ class NotificationServiceTest extends TestCase
             ->with($smsChannel->getUrl(), $message->getMessage())
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
-        $result = (new Notification())->send($smsChannel, $message);
+        $result = resolve(Notification::class)->send($smsChannel, $message);
 
         $this->assertTrue($result);
     }
