@@ -6,16 +6,16 @@ class MailChannel implements NotifiableChannelInterface
 {
     public function getUrl(): string
     {
-        return 'https://www.mail.com';
+        return config('notifier.mail-provider.url');
     }
 
     public function getRetryTime(): int
     {
-       return 3;
+       return config('notifier.mail-provider.retry-time');
     }
 
     public function getSleepTime(): int
     {
-        return 100;
+        return config('notifier.mail-provider.sleep-time');
     }
 }

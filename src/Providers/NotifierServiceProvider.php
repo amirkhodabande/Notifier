@@ -6,5 +6,10 @@ use Illuminate\Support\ServiceProvider;
 
 class NotifierServiceProvider extends ServiceProvider
 {
-
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/../../config/notifier.php' => config_path('notifier.php')
+        ], 'notifier-config');
+    }
 }

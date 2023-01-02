@@ -6,16 +6,16 @@ class SMSChannel implements NotifiableChannelInterface
 {
     public function getUrl(): string
     {
-        return 'https://www.mail.com';
+        return config('notifier.sms-provider.url');
     }
 
     public function getRetryTime(): int
     {
-       return 3;
+       return config('notifier.sms-provider.retry-time');
     }
 
     public function getSleepTime(): int
     {
-        return 100;
+        return config('notifier.sms-provider.sleep-time');
     }
 }
