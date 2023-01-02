@@ -1,12 +1,14 @@
 <?php
 
+namespace Amir\Notifier\Tests\Feature;
+
 use Amir\Notifier\Channels\MailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableMessage;
 use Amir\Notifier\Services\Notification;
+use Amir\Notifier\Tests\TestCase;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
-use Orchestra\Testbench\TestCase;
 
 class NotificationServiceTest extends TestCase
 {

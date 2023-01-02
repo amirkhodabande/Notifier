@@ -2,7 +2,7 @@
 
 namespace Amir\Notifier\Tests\Feature;
 
-use Orchestra\Testbench\TestCase;
+use Amir\Notifier\Tests\TestCase;
 
 class SmokeTest extends TestCase
 {
