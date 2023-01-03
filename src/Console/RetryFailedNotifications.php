@@ -5,7 +5,7 @@ namespace Amir\Notifier\Console;
 use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableData;
-use Amir\Notifier\Messages\ValueObjects\MailMessage;
+use Amir\Notifier\Messages\ValueObjects\CustomMailMessage;
 use Amir\Notifier\Messages\ValueObjects\SMSMessage;
 use Amir\Notifier\Models\Notification;
 use Amir\Notifier\Services\Notification as NotificationService;
@@ -72,7 +72,7 @@ class RetryFailedNotifications extends Command
         switch ($notification->channel) {
             case CustomMailChannel::class:
                 return
-                    new MailMessage($notification->message['subject'], $notification->message['message']);
+                    new CustomMailMessage($notification->message['subject'], $notification->message['message']);
                 break;
 
             case SMSChannel::class:

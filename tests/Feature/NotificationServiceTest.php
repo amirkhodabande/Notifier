@@ -5,7 +5,7 @@ namespace Amir\Notifier\Tests\Feature;
 use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableData;
-use Amir\Notifier\Messages\ValueObjects\MailMessage;
+use Amir\Notifier\Messages\ValueObjects\CustomMailMessage;
 use Amir\Notifier\Messages\ValueObjects\SMSMessage;
 use Amir\Notifier\Services\Notification;
 use Amir\Notifier\Tests\TestCase;
@@ -25,7 +25,7 @@ class NotificationServiceTest extends TestCase
         $mailChannel = resolve(CustomMailChannel::class);
         $message = resolve(NotifiableData::class)->setReceiver('test@mail.com')
             ->setMessage(
-                new MailMessage('test subject', 'test message')
+                new CustomMailMessage('test subject', 'test message')
             );
 
         Http::shouldReceive('retry')
@@ -83,7 +83,7 @@ class NotificationServiceTest extends TestCase
         $mailChannel = resolve(CustomMailChannel::class);
         $message = resolve(NotifiableData::class)->setReceiver('test@mail.com')
             ->setMessage(
-                new MailMessage('test subject', 'test message')
+                new CustomMailMessage('test subject', 'test message')
             );
 
         Http::shouldReceive('retry')

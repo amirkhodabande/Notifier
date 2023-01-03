@@ -4,7 +4,7 @@ namespace Amir\Notifier\Messages\ValueObjects;
 
 use Exception;
 
-class MailMessage implements NotifiableMessage
+class CustomMailMessage implements NotifiableMessage
 {
     public function __construct(public readonly string $subject, public readonly string $message)
     {

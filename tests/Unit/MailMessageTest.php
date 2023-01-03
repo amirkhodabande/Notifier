@@ -2,7 +2,7 @@
 
 namespace Amir\Notifier\Tests\Unit;
 
-use Amir\Notifier\Messages\ValueObjects\MailMessage;
+use Amir\Notifier\Messages\ValueObjects\CustomMailMessage;
 use Amir\Notifier\Tests\TestCase;
 use Exception;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -19,6 +19,6 @@ class MailMessageTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Subject cant be greater than 250 characters.');
 
-        new MailMessage($this->faker->sentence(100), $this->faker->sentence(3));
+        new CustomMailMessage($this->faker->sentence(100), $this->faker->sentence(3));
     }
 }
