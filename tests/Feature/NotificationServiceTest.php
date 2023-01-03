@@ -28,7 +28,10 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with($mailChannel->getRetryTime(), $mailChannel->getSleepTime())
+            ->with(
+                config('notifier.mail-provider.retry-time'),
+                config('notifier.mail-provider.sleep-time')
+            )
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
@@ -53,7 +56,10 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with($smsChannel->getRetryTime(), $smsChannel->getSleepTime())
+            ->with(
+                config('notifier.sms-provider.retry-time'),
+                config('notifier.sms-provider.sleep-time')
+            )
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
@@ -78,7 +84,10 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with($mailChannel->getRetryTime(), $mailChannel->getSleepTime())
+            ->with(
+                config('notifier.mail-provider.retry-time'),
+                config('notifier.mail-provider.sleep-time')
+            )
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
@@ -110,7 +119,10 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with($smsChannel->getRetryTime(), $smsChannel->getSleepTime())
+            ->with(
+                config('notifier.sms-provider.retry-time'),
+                config('notifier.sms-provider.sleep-time')
+            )
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
