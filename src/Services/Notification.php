@@ -4,6 +4,7 @@ namespace Amir\Notifier\Services;
 
 use Amir\Notifier\Channels\NotifiableChannelInterface;
 use Amir\Notifier\Messages\NotifiableMessage;
+use Amir\Notifier\Models\Notification as NotificationModel;
 use Illuminate\Support\Facades\Http;
 
 class Notification
@@ -18,8 +19,15 @@ class Notification
 
             return true;
         } catch (\Exception $exception) {
-//            TODO: error handling
-            throw new $exception;
+            NotificationModel::create([
+                'channel' => $notifiableChannel::class,
+                'status' => false,
+                'provider_url' => $notifiableChannel->getUrl(),
+                'receiver' => array_values($notifiableChannel->getReceiver())[0],
+                'message' => $notifiableMessage->getMessage()
+            ]);
+
+            return false;
         }
     }
 }
