@@ -1,6 +1,8 @@
 <?php
 
 
+use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Models\Notification;
 use Amir\Notifier\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,5 +20,52 @@ class ClearFailedNotificationsCommandTest extends TestCase
         Artisan::call('notification:clear-fails');
 
         $this->assertDatabaseEmpty('notifications');
+    }
+
+    /** @test */
+    public function it_is_able_to_remove_only_mail_channel_failed_notifications()
+    {
+        factory(Notification::class)->times(2)->create([
+            'channel' => SMSChannel::class
+            ,'status' => false
+        ]);
+        factory(Notification::class)->times(5)->create([
+            'channel' => MailChannel::class
+            ,'status' => false
+        ]);
+
+        Artisan::call('notification:clear-fails', ['channel' => 'mail']);
+
+        $this->assertDatabaseCount('notifications', 2);
+    }
+
+    /** @test */
+    public function it_is_able_to_remove_only_sms_channel_failed_notifications()
+    {
+        factory(Notification::class)->times(2)->create([
+            'channel' => MailChannel::class
+            ,'status' => false
+        ]);
+        factory(Notification::class)->times(5)->create([
+            'channel' => SMSChannel::class
+            ,'status' => false
+        ]);
+
+        Artisan::call('notification:clear-fails', ['channel' => 'sms']);
+
+        $this->assertDatabaseCount('notifications', 2);
+    }
+
+    /** @test */
+    public function it_will_not_remove_notifications_when_an_invalid_channel_name_entered()
+    {
+        factory(Notification::class)->times(5)->create([
+            'channel' => SMSChannel::class
+            ,'status' => false
+        ]);
+
+        Artisan::call('notification:clear-fails', ['channel' => 'invalid_channel']);
+
+        $this->assertDatabaseCount('notifications', 5);
     }
 }
