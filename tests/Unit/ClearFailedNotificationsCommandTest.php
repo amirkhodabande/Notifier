@@ -1,7 +1,7 @@
 <?php
 
 
-use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Models\Notification;
 use Amir\Notifier\Tests\TestCase;
@@ -30,7 +30,7 @@ class ClearFailedNotificationsCommandTest extends TestCase
             ,'status' => false
         ]);
         factory(Notification::class)->times(5)->create([
-            'channel' => MailChannel::class
+            'channel' => CustomMailChannel::class
             ,'status' => false
         ]);
 
@@ -43,7 +43,7 @@ class ClearFailedNotificationsCommandTest extends TestCase
     public function it_is_able_to_remove_only_sms_channel_failed_notifications()
     {
         factory(Notification::class)->times(2)->create([
-            'channel' => MailChannel::class
+            'channel' => CustomMailChannel::class
             ,'status' => false
         ]);
         factory(Notification::class)->times(5)->create([

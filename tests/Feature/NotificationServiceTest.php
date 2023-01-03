@@ -2,7 +2,7 @@
 
 namespace Amir\Notifier\Tests\Feature;
 
-use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableData;
 use Amir\Notifier\Messages\ValueObjects\MailMessage;
@@ -21,7 +21,7 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_email()
     {
-        $mailChannel = resolve(MailChannel::class)->setReceiver('test@mail.com');
+        $mailChannel = resolve(CustomMailChannel::class)->setReceiver('test@mail.com');
         $message = resolve(NotifiableData::class)->setMessage(
             new MailMessage('test subject', 'test message')
         );
@@ -77,7 +77,7 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function it_will_save_mail_failed_requests()
     {
-        $mailChannel = resolve(MailChannel::class)->setReceiver('test@mail.com');
+        $mailChannel = resolve(CustomMailChannel::class)->setReceiver('test@mail.com');
         $message = resolve(NotifiableData::class)->setMessage(
             new MailMessage('test subject', 'test message')
         );

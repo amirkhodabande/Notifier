@@ -1,7 +1,7 @@
 <?php
 
 
-use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Models\Notification;
 use Amir\Notifier\Services\Notification as NotificationService;
@@ -22,7 +22,7 @@ class RetryFailedNotificationsCommandTest extends TestCase
         $this->app->instance(NotificationService::class, $mockedNotificationService);
 
         factory(Notification::class)->create([
-            'channel' => MailChannel::class,
+            'channel' => CustomMailChannel::class,
             'status' => false,
             'message' => [
                 'subject' => 'test subject', 'message' => 'test message'

@@ -3,11 +3,10 @@
 namespace Amir\Notifier\Channels;
 
 use Amir\Notifier\Messages\NotifiableData;
-use Amir\Notifier\Models\Notification as NotificationModel;
 use Amir\Notifier\Services\Notification;
 use Illuminate\Support\Facades\Http;
 
-class MailChannel implements NotifiableChannelInterface
+class CustomMailChannel implements NotifiableChannelInterface
 {
     private string $receiver;
 

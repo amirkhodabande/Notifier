@@ -2,7 +2,7 @@
 
 namespace Amir\Notifier\Console;
 
-use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Models\Notification;
 use Illuminate\Console\Command;
@@ -34,7 +34,7 @@ class ClearFailedNotifications extends Command
     private function getChannelClassByName(?string $channelName): ?string
     {
         $channels = [
-            'mail' => MailChannel::class,
+            'mail' => CustomMailChannel::class,
             'sms' => SMSChannel::class
         ];
 
