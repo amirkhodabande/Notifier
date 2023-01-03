@@ -68,7 +68,7 @@ class NotificationServiceTest extends TestCase
     }
 
     /** @test */
-    public function it_will_save_failed_requests()
+    public function it_will_save_mail_failed_requests()
     {
         $mailChannel = resolve(MailChannel::class)->setReceiver('test@mail.com');
         $message = resolve(NotifiableMessage::class)->setMessage([
@@ -96,6 +96,38 @@ class NotificationServiceTest extends TestCase
             'status' => 0,
             'provider_url' => $mailChannel->getUrl(),
             'receiver' => $mailChannel->getReceiver(),
+            'message' => json_encode($message->getMessage())
+        ]);
+    }
+
+    /** @test */
+    public function it_will_save_sms_failed_requests()
+    {
+        $smsChannel = resolve(SMSChannel::class)->setReceiver('09331234567');
+        $message = resolve(NotifiableMessage::class)->setMessage([
+            'message' => 'test message'
+        ]);
+
+        Http::shouldReceive('retry')
+            ->once()
+            ->with($smsChannel->getRetryTime(), $smsChannel->getSleepTime())
+            ->andReturnSelf();
+        Http::shouldReceive('post')
+            ->once()
+            ->with(
+                $smsChannel->getUrl(),
+                array_merge($smsChannel->getReceiver(), $message->getMessage())
+            )
+            ->andThrow(new Exception('Request exception'));
+
+        $result = resolve(Notification::class)->send($smsChannel, $message);
+
+        $this->assertFalse($result);
+        $this->assertDatabaseHas('notifications', [
+            'channel' => $smsChannel::class,
+            'status' => 0,
+            'provider_url' => $smsChannel->getUrl(),
+            'receiver' => $smsChannel->getReceiver(),
             'message' => json_encode($message->getMessage())
         ]);
     }
