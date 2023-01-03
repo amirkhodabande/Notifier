@@ -8,9 +8,5 @@ interface NotifiableChannelInterface
 {
     public function getUrl(): string;
 
-    public function getReceiver(): array;
-
-    public function setReceiver(string $receiver): self;
-
     public function send(NotifiableData $notifiableData): bool;
 }

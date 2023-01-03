@@ -19,7 +19,7 @@ class Notification
             'channel' => $notifiableChannel::class,
             'status' => false,
             'provider_url' => $notifiableChannel->getUrl(),
-            'receiver' => array_values($notifiableChannel->getReceiver())[0],
+            'receiver' => $notifiableData->getReceiver(),
             'message' => $notifiableData->getMessage()
         ]);
     }

@@ -21,10 +21,11 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_email()
     {
-        $mailChannel = resolve(CustomMailChannel::class)->setReceiver('test@mail.com');
-        $message = resolve(NotifiableData::class)->setMessage(
-            new MailMessage('test subject', 'test message')
-        );
+        $mailChannel = resolve(CustomMailChannel::class);
+        $message = resolve(NotifiableData::class)->setReceiver('test@mail.com')
+            ->setMessage(
+                new MailMessage('test subject', 'test message')
+            );
 
         Http::shouldReceive('retry')
             ->once()
@@ -37,7 +38,10 @@ class NotificationServiceTest extends TestCase
             ->once()
             ->with(
                 $mailChannel->getUrl(),
-                array_merge($mailChannel->getReceiver(), $message->getMessage())
+                array_merge(
+                    ['email' => $message->getReceiver()],
+                    $message->getMessage()
+                )
             )
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
@@ -49,10 +53,11 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_sms()
     {
-        $smsChannel = resolve(SMSChannel::class)->setReceiver('09331234567');
-        $message = resolve(NotifiableData::class)->setMessage(
-            new SMSMessage('test message')
-        );
+        $smsChannel = resolve(SMSChannel::class);
+        $message = resolve(NotifiableData::class)->setReceiver('09331234567')
+            ->setMessage(
+                new SMSMessage('test message')
+            );
 
         Http::shouldReceive('retry')
             ->once()
@@ -65,7 +70,10 @@ class NotificationServiceTest extends TestCase
             ->once()
             ->with(
                 $smsChannel->getUrl(),
-                array_merge($smsChannel->getReceiver(), $message->getMessage())
+                array_merge(
+                    ['mobile' => $message->getReceiver()],
+                    $message->getMessage()
+                )
             )
             ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
 
@@ -77,10 +85,11 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function it_will_save_mail_failed_requests()
     {
-        $mailChannel = resolve(CustomMailChannel::class)->setReceiver('test@mail.com');
-        $message = resolve(NotifiableData::class)->setMessage(
-            new MailMessage('test subject', 'test message')
-        );
+        $mailChannel = resolve(CustomMailChannel::class);
+        $message = resolve(NotifiableData::class)->setReceiver('test@mail.com')
+            ->setMessage(
+                new MailMessage('test subject', 'test message')
+            );
 
         Http::shouldReceive('retry')
             ->once()
@@ -93,7 +102,10 @@ class NotificationServiceTest extends TestCase
             ->once()
             ->with(
                 $mailChannel->getUrl(),
-                array_merge($mailChannel->getReceiver(), $message->getMessage())
+                array_merge(
+                    ['email' => $message->getReceiver()],
+                    $message->getMessage()
+                )
             )
             ->andThrow(new Exception('Request exception'));
 
@@ -104,7 +116,7 @@ class NotificationServiceTest extends TestCase
             'channel' => $mailChannel::class,
             'status' => 0,
             'provider_url' => $mailChannel->getUrl(),
-            'receiver' => $mailChannel->getReceiver(),
+            'receiver' => $message->getReceiver(),
             'message' => json_encode($message->getMessage())
         ]);
     }
@@ -112,10 +124,11 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function it_will_save_sms_failed_requests()
     {
-        $smsChannel = resolve(SMSChannel::class)->setReceiver('09331234567');
-        $message = resolve(NotifiableData::class)->setMessage(
-            new SMSMessage('test message')
-        );
+        $smsChannel = resolve(SMSChannel::class);
+        $message = resolve(NotifiableData::class)->setReceiver('09331234567')
+            ->setMessage(
+                new SMSMessage('test message')
+            );
 
         Http::shouldReceive('retry')
             ->once()
@@ -128,7 +141,10 @@ class NotificationServiceTest extends TestCase
             ->once()
             ->with(
                 $smsChannel->getUrl(),
-                array_merge($smsChannel->getReceiver(), $message->getMessage())
+                array_merge(
+                    ['mobile' => $message->getReceiver()],
+                    $message->getMessage()
+                )
             )
             ->andThrow(new Exception('Request exception'));
 
@@ -139,7 +155,7 @@ class NotificationServiceTest extends TestCase
             'channel' => $smsChannel::class,
             'status' => 0,
             'provider_url' => $smsChannel->getUrl(),
-            'receiver' => $smsChannel->getReceiver(),
+            'receiver' => $message->getReceiver(),
             'message' => json_encode($message->getMessage())
         ]);
     }

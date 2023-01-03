@@ -19,18 +19,6 @@ class SMSChannel implements NotifiableChannelInterface
         return config('notifier.sms-provider.url');
     }
 
-    public function getReceiver(): array
-    {
-        return ['mobile' => $this->receiver];
-    }
-
-    public function setReceiver(string $receiver): NotifiableChannelInterface
-    {
-        $this->receiver = $receiver;
-
-        return $this;
-    }
-
     public function send(NotifiableData $notifiableData): bool
     {
         try {
@@ -39,7 +27,10 @@ class SMSChannel implements NotifiableChannelInterface
                 config('notifier.sms-provider.sleep-time')
             )->post(
                 $this->getUrl(),
-                array_merge($this->getReceiver(), $notifiableData->getMessage())
+                array_merge(
+                    ['mobile' => $notifiableData->getReceiver()],
+                    $notifiableData->getMessage()
+                )
             );
 
             return true;

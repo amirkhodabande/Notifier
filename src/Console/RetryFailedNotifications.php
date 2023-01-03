@@ -41,8 +41,9 @@ class RetryFailedNotifications extends Command
             ->where('status', false);
 
         foreach ($notifications->cursor() as $notification) {
-            $notifiableChannel = resolve($notification->channel)->setReceiver($notification->receiver);
-            $notifiableData = $this->notifiableData->setMessage($this->getProperMessageForChannel($notification));
+            $notifiableChannel = resolve($notification->channel);
+            $notifiableData = $this->notifiableData->setReceiver($notification->receiver)
+                ->setMessage($this->getProperMessageForChannel($notification));
 
             $this->notificationService->send($notifiableChannel, $notifiableData);
 
@@ -59,7 +60,7 @@ class RetryFailedNotifications extends Command
             'sms' => SMSChannel::class
         ];
 
-        if(!$channelName) {
+        if (!$channelName) {
             return null;
         }
 

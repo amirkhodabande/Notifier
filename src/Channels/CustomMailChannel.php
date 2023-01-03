@@ -19,18 +19,6 @@ class CustomMailChannel implements NotifiableChannelInterface
         return config('notifier.mail-provider.url');
     }
 
-    public function getReceiver(): array
-    {
-         return  ['email' => $this->receiver];
-    }
-
-    public function setReceiver(string $receiver): NotifiableChannelInterface
-    {
-        $this->receiver = $receiver;
-
-        return $this;
-    }
-
     public function send(NotifiableData $notifiableData): bool
     {
         try {
@@ -39,7 +27,10 @@ class CustomMailChannel implements NotifiableChannelInterface
                 config('notifier.mail-provider.sleep-time')
             )->post(
                 $this->getUrl(),
-                array_merge($this->getReceiver(), $notifiableData->getMessage())
+                array_merge(
+                    ['email' => $notifiableData->getReceiver()],
+                    $notifiableData->getMessage()
+                )
             );
 
             return true;
