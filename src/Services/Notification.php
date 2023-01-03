@@ -3,18 +3,18 @@
 namespace Amir\Notifier\Services;
 
 use Amir\Notifier\Channels\NotifiableChannelInterface;
-use Amir\Notifier\Messages\NotifiableMessage;
+use Amir\Notifier\Messages\NotifiableData;
 use Amir\Notifier\Models\Notification as NotificationModel;
 use Illuminate\Support\Facades\Http;
 
 class Notification
 {
-    public function send(NotifiableChannelInterface $notifiableChannel, NotifiableMessage $notifiableMessage): bool
+    public function send(NotifiableChannelInterface $notifiableChannel, NotifiableData $notifiableData): bool
     {
         try {
             Http::retry($notifiableChannel->getRetryTime(), $notifiableChannel->getSleepTime())->post(
                 $notifiableChannel->getUrl(),
-                array_merge($notifiableChannel->getReceiver(), $notifiableMessage->getMessage())
+                array_merge($notifiableChannel->getReceiver(), $notifiableData->getMessage())
             );
 
             return true;
@@ -24,7 +24,7 @@ class Notification
                 'status' => false,
                 'provider_url' => $notifiableChannel->getUrl(),
                 'receiver' => array_values($notifiableChannel->getReceiver())[0],
-                'message' => $notifiableMessage->getMessage()
+                'message' => $notifiableData->getMessage()
             ]);
 
             return false;

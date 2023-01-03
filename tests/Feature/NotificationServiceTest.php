@@ -4,7 +4,9 @@ namespace Amir\Notifier\Tests\Feature;
 
 use Amir\Notifier\Channels\MailChannel;
 use Amir\Notifier\Channels\SMSChannel;
-use Amir\Notifier\Messages\NotifiableMessage;
+use Amir\Notifier\Messages\NotifiableData;
+use Amir\Notifier\Messages\ValueObjects\MailMessage;
+use Amir\Notifier\Messages\ValueObjects\SMSMessage;
 use Amir\Notifier\Services\Notification;
 use Amir\Notifier\Tests\TestCase;
 use Exception;
@@ -20,10 +22,9 @@ class NotificationServiceTest extends TestCase
     public function user_can_send_email()
     {
         $mailChannel = resolve(MailChannel::class)->setReceiver('test@mail.com');
-        $message = resolve(NotifiableMessage::class)->setMessage([
-            'subject' => 'test subject',
-            'message' => 'test message'
-        ]);
+        $message = resolve(NotifiableData::class)->setMessage(
+            new MailMessage('test subject', 'test message')
+        );
 
         Http::shouldReceive('retry')
             ->once()
@@ -46,9 +47,9 @@ class NotificationServiceTest extends TestCase
     public function user_can_send_sms()
     {
         $smsChannel = resolve(SMSChannel::class)->setReceiver('09331234567');
-        $message = resolve(NotifiableMessage::class)->setMessage([
-            'message' => 'test message'
-        ]);
+        $message = resolve(NotifiableData::class)->setMessage(
+            new SMSMessage('test message')
+        );
 
         Http::shouldReceive('retry')
             ->once()
@@ -71,10 +72,9 @@ class NotificationServiceTest extends TestCase
     public function it_will_save_mail_failed_requests()
     {
         $mailChannel = resolve(MailChannel::class)->setReceiver('test@mail.com');
-        $message = resolve(NotifiableMessage::class)->setMessage([
-            'subject' => 'test subject',
-            'message' => 'test message'
-        ]);
+        $message = resolve(NotifiableData::class)->setMessage(
+            new MailMessage('test subject', 'test message')
+        );
 
         Http::shouldReceive('retry')
             ->once()
@@ -104,9 +104,9 @@ class NotificationServiceTest extends TestCase
     public function it_will_save_sms_failed_requests()
     {
         $smsChannel = resolve(SMSChannel::class)->setReceiver('09331234567');
-        $message = resolve(NotifiableMessage::class)->setMessage([
-            'message' => 'test message'
-        ]);
+        $message = resolve(NotifiableData::class)->setMessage(
+            new SMSMessage('test message')
+        );
 
         Http::shouldReceive('retry')
             ->once()
