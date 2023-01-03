@@ -13,5 +13,8 @@
         "psr-4": {
             "Amir\\Notifier\\Tests\\": "tests/"
         }
+    },
+    "require": {
+        "laravel/legacy-factories": "^1.3"
     }
 }
