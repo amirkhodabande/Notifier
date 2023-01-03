@@ -2,6 +2,7 @@
 
 
 use Amir\Notifier\Channels\MailChannel;
+use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Models\Notification;
 use Amir\Notifier\Services\Notification as NotificationService;
 use Amir\Notifier\Tests\TestCase;
@@ -29,5 +30,24 @@ class RetryFailedNotificationsCommandTest extends TestCase
         ]);
 
         Artisan::call('notification:retry-fails', ['channel' => 'mail']);
+    }
+
+    /** @test */
+    public function it_will_retry_sms_failed_notifications()
+    {
+        $mockedNotificationService = \Mockery::mock(NotificationService::class);
+        $mockedNotificationService->shouldReceive('send')
+            ->once();
+        $this->app->instance(NotificationService::class, $mockedNotificationService);
+
+        factory(Notification::class)->create([
+            'channel' => SMSChannel::class,
+            'status' => false,
+            'message' => [
+                'message' => 'test message'
+            ]
+        ]);
+
+        Artisan::call('notification:retry-fails', ['channel' => 'sms']);
     }
 }
