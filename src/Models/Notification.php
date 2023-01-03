@@ -9,7 +9,7 @@ class Notification extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['channel', 'status', 'provider_url', 'receiver', 'message'];
+    protected $fillable = ['channel', 'status', 'receiver', 'message'];
 
     protected $casts = ['message' => 'array'];
 }

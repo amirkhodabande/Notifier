@@ -18,7 +18,6 @@ class Notification
         NotificationModel::create([
             'channel' => $notifiableChannel::class,
             'status' => false,
-            'provider_url' => $notifiableChannel->getUrl(),
             'receiver' => $notifiableData->getReceiver(),
             'message' => $notifiableData->getMessage()
         ]);

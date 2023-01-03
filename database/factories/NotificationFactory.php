@@ -10,7 +10,6 @@ $factory->define(Notification::class, function (Faker\Generator $faker) {
             CustomMailChannel::class, SMSChannel::class
         ]),
         'status' => $faker->boolean,
-        'provider_url' => $faker->url,
         'receiver' => $faker->email,
         'message' => ['message' => $faker->sentence]
     ];

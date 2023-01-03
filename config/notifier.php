@@ -1,14 +1,19 @@
 <?php
 
 return [
-    'sms-provider' => [
-        'url' => 'https://www.sms.com',
-        'retry-time' => 3,
-        'sleep-time' => 100
+    'sms' => [
+        'test-provider' => [
+            'from' => '09101234567',
+            'url' => 'https://www.sms.com',
+        ]
     ],
-    'email-provider' => [
-        'url' => 'https://www.mail.com',
-        'retry-time' => 3,
-        'sleep-time' => 100
+    'email' => [
+        'custom-provider' => [
+            'from' => 'sender@mail.com',
+            'url' => 'https://www.mail.com',
+        ],
+        'laravel-mail' => [
+
+        ]
     ]
 ];

@@ -21,6 +21,7 @@ class NotificationServiceTest extends TestCase
     /** @test */
     public function user_can_send_email()
     {
+        $this->withoutExceptionHandling();
         $mailChannel = resolve(CustomMailChannel::class);
         $message = resolve(NotifiableData::class)->setReceiver('test@mail.com')
             ->setMessage(
@@ -29,15 +30,12 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with(
-                config('notifier.mail-provider.retry-time'),
-                config('notifier.mail-provider.sleep-time')
-            )
+            ->with(3, 100)
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
             ->with(
-                $mailChannel->getUrl(),
+                config('notifier.email.custom-provider.url'),
                 array_merge(
                     ['email' => $message->getReceiver()],
                     $message->getMessage()
@@ -61,15 +59,12 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with(
-                config('notifier.sms-provider.retry-time'),
-                config('notifier.sms-provider.sleep-time')
-            )
+            ->with(3, 100)
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
             ->with(
-                $smsChannel->getUrl(),
+                config('notifier.sms.test-provider.url'),
                 array_merge(
                     ['mobile' => $message->getReceiver()],
                     $message->getMessage()
@@ -93,15 +88,12 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with(
-                config('notifier.mail-provider.retry-time'),
-                config('notifier.mail-provider.sleep-time')
-            )
+            ->with(3, 100)
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
             ->with(
-                $mailChannel->getUrl(),
+                config('notifier.email.custom-provider.url'),
                 array_merge(
                     ['email' => $message->getReceiver()],
                     $message->getMessage()
@@ -115,7 +107,6 @@ class NotificationServiceTest extends TestCase
         $this->assertDatabaseHas('notifications', [
             'channel' => $mailChannel::class,
             'status' => 0,
-            'provider_url' => $mailChannel->getUrl(),
             'receiver' => $message->getReceiver(),
             'message' => json_encode($message->getMessage())
         ]);
@@ -132,15 +123,12 @@ class NotificationServiceTest extends TestCase
 
         Http::shouldReceive('retry')
             ->once()
-            ->with(
-                config('notifier.sms-provider.retry-time'),
-                config('notifier.sms-provider.sleep-time')
-            )
+            ->with(3, 100)
             ->andReturnSelf();
         Http::shouldReceive('post')
             ->once()
             ->with(
-                $smsChannel->getUrl(),
+                config('notifier.sms.test-provider.url'),
                 array_merge(
                     ['mobile' => $message->getReceiver()],
                     $message->getMessage()
@@ -154,7 +142,6 @@ class NotificationServiceTest extends TestCase
         $this->assertDatabaseHas('notifications', [
             'channel' => $smsChannel::class,
             'status' => 0,
-            'provider_url' => $smsChannel->getUrl(),
             'receiver' => $message->getReceiver(),
             'message' => json_encode($message->getMessage())
         ]);

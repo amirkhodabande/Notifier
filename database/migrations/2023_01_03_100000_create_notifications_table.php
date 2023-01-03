@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('channel')->index();
             $table->boolean('status')->index();
-            $table->string('provider_url');
             $table->string('receiver');
             $table->json('message');
             $table->timestamps();

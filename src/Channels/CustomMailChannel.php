@@ -8,25 +8,15 @@ use Illuminate\Support\Facades\Http;
 
 class CustomMailChannel implements NotifiableChannelInterface
 {
-    private string $receiver;
-
     public function __construct(private readonly Notification $notificationService)
     {
-    }
-
-    public function getUrl(): string
-    {
-        return config('notifier.mail-provider.url');
     }
 
     public function send(NotifiableData $notifiableData): bool
     {
         try {
-            Http::retry(
-                config('notifier.mail-provider.retry-time'),
-                config('notifier.mail-provider.sleep-time')
-            )->post(
-                $this->getUrl(),
+            Http::retry(3, 100)->post(
+                config('notifier.email.custom-provider.url'),
                 array_merge(
                     ['email' => $notifiableData->getReceiver()],
                     $notifiableData->getMessage()
