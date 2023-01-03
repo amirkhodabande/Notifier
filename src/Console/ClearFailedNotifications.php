@@ -38,6 +38,10 @@ class ClearFailedNotifications extends Command
             'sms' => SMSChannel::class
         ];
 
+        if(!$channelName) {
+            return null;
+        }
+
         return optional($channels)[$channelName];
     }
 }

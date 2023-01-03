@@ -19,6 +19,6 @@ class MailMessageTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Subject cant be greater than 250 characters.');
 
-        new MailMessage($this->faker->sentence(50), $this->faker->sentence(3));
+        new MailMessage($this->faker->sentence(100), $this->faker->sentence(3));
     }
 }

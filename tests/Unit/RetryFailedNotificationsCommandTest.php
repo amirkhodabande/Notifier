@@ -50,4 +50,31 @@ class RetryFailedNotificationsCommandTest extends TestCase
 
         Artisan::call('notification:retry-fails', ['channel' => 'sms']);
     }
+
+    /** @test */
+    public function it_can_automatically_detect_channel()
+    {
+        $mockedNotificationService = \Mockery::mock(NotificationService::class);
+        $mockedNotificationService->shouldReceive('send')
+            ->times(4);
+        $this->app->instance(NotificationService::class, $mockedNotificationService);
+
+        factory(Notification::class)->times(2)->create([
+            'channel' => SMSChannel::class,
+            'status' => false,
+            'message' => [
+                'message' => 'test message'
+            ]
+        ]);
+
+        factory(Notification::class)->times(2)->create([
+            'channel' => SMSChannel::class,
+            'status' => false,
+            'message' => [
+                'message' => 'test message'
+            ]
+        ]);
+
+        Artisan::call('notification:retry-fails');
+    }
 }
