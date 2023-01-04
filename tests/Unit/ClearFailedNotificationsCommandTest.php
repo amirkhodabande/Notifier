@@ -34,7 +34,7 @@ class ClearFailedNotificationsCommandTest extends TestCase
             ,'status' => false
         ]);
 
-        Artisan::call('notification:clear-fails', ['channel' => 'mail']);
+        Artisan::call('notification:clear-fails', ['channel' => CustomMailChannel::class]);
 
         $this->assertDatabaseCount('notifications', 2);
     }
@@ -51,7 +51,7 @@ class ClearFailedNotificationsCommandTest extends TestCase
             ,'status' => false
         ]);
 
-        Artisan::call('notification:clear-fails', ['channel' => 'sms']);
+        Artisan::call('notification:clear-fails', ['channel' => SMSChannel::class]);
 
         $this->assertDatabaseCount('notifications', 2);
     }

@@ -15,12 +15,7 @@ class ClearFailedNotifications extends Command
 
     public function handle()
     {
-        $channel = $this->getChannelClassByName($this->argument('channel'));
-
-        if($this->argument('channel') && !$channel) {
-            $this->info('The entered channel name is invalid!');
-            return false;
-        }
+        $channel = $this->argument('channel');
 
         Notification::where('status', false)
             ->when($channel, function ($query) use ($channel) {
@@ -29,19 +24,5 @@ class ClearFailedNotifications extends Command
             ->delete();
 
         $this->info('Operation finished successfully!');
-    }
-
-    private function getChannelClassByName(?string $channelName): ?string
-    {
-        $channels = [
-            'mail' => CustomMailChannel::class,
-            'sms' => SMSChannel::class
-        ];
-
-        if(!$channelName) {
-            return null;
-        }
-
-        return optional($channels)[$channelName];
     }
 }

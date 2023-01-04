@@ -29,7 +29,7 @@ class RetryFailedNotificationsCommandTest extends TestCase
             ]
         ]);
 
-        Artisan::call('notification:retry-fails', ['channel' => 'mail']);
+        Artisan::call('notification:retry-fails', ['channel' => CustomMailChannel::class]);
     }
 
     /** @test */
@@ -48,7 +48,7 @@ class RetryFailedNotificationsCommandTest extends TestCase
             ]
         ]);
 
-        Artisan::call('notification:retry-fails', ['channel' => 'sms']);
+        Artisan::call('notification:retry-fails', ['channel' => SMSChannel::class]);
     }
 
     /** @test */

@@ -3,9 +3,12 @@
 namespace Amir\Notifier\Console;
 
 use Amir\Notifier\Channels\CustomMailChannel;
+use Amir\Notifier\Channels\KavenegarChannel;
+use Amir\Notifier\Channels\MailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableData;
 use Amir\Notifier\Messages\ValueObjects\CustomMailMessage;
+use Amir\Notifier\Messages\ValueObjects\MailMessage;
 use Amir\Notifier\Messages\ValueObjects\SMSMessage;
 use Amir\Notifier\Models\Notification;
 use Amir\Notifier\Services\Notification as NotificationService;
@@ -27,12 +30,7 @@ class RetryFailedNotifications extends Command
 
     public function handle()
     {
-        $channel = $this->getChannelClassByName($this->argument('channel'));
-
-        if ($this->argument('channel') && !$channel) {
-            $this->info('The entered channel name is invalid!');
-            return false;
-        }
+        $channel = $this->argument('channel');
 
         $notifications = Notification::query()
             ->when($channel, function ($query) use ($channel) {
@@ -53,20 +51,6 @@ class RetryFailedNotifications extends Command
         $this->info('Operation finished successfully!');
     }
 
-    private function getChannelClassByName(?string $channelName): ?string
-    {
-        $channels = [
-            'mail' => CustomMailChannel::class,
-            'sms' => SMSChannel::class
-        ];
-
-        if (!$channelName) {
-            return null;
-        }
-
-        return optional($channels)[$channelName];
-    }
-
     private function getProperMessageForChannel(Notification $notification)
     {
         switch ($notification->channel) {
@@ -75,7 +59,12 @@ class RetryFailedNotifications extends Command
                     new CustomMailMessage($notification->message['subject'], $notification->message['message']);
                 break;
 
-            case SMSChannel::class:
+            case MailChannel::class:
+                return
+                    new MailMessage($notification->message['subject'], $notification->message['message'], $notification->message['view'] );
+                break;
+
+            case SMSChannel::class || KavenegarChannel::class:
                 return
                     new SMSMessage($notification->message['message']);
                 break;
