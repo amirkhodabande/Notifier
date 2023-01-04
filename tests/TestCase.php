@@ -23,17 +23,13 @@ class TestCase extends BaseTestCase
 
     protected function defineEnvironment($app)
     {
-        $app['config']->set('notifier.sms.test-provider.url', 'https://www.sms.com');
-
-        $app['config']->set('notifier.email.custom-provider.url', 'https://www.mail.com');
-    }
-
-    protected function getEnvironmentSetUp($app)
-    {
         $app['config']->set('database.default', 'testdb');
         $app['config']->set('database.connections.testdb', [
             'driver' => 'sqlite',
             'database' => ':memory:'
         ]);
+
+        $app['config']->set('notifier.sms.test-provider.url', 'https://www.sms.com');
+        $app['config']->set('notifier.email.custom-provider.url', 'https://www.mail.com');
     }
 }
