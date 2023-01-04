@@ -3,6 +3,7 @@
 namespace Amir\Notifier\Tests\Feature;
 
 use Amir\Notifier\Channels\CustomMailChannel;
+use Amir\Notifier\Channels\KavenegarChannel;
 use Amir\Notifier\Channels\MailChannel;
 use Amir\Notifier\Channels\SMSChannel;
 use Amir\Notifier\Messages\NotifiableData;
@@ -169,6 +170,38 @@ class NotificationServiceTest extends TestCase
             ->once();
 
         $result = resolve(Notification::class)->send($mailChannel, $message);
+
+        $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function user_can_send_sms_with_kavenegar()
+    {
+        $smsChannel = resolve(KavenegarChannel::class);
+        $message = resolve(NotifiableData::class)->setReceiver('09331234567')
+            ->setMessage(
+                new SMSMessage('test message')
+            );
+
+        Http::shouldReceive('retry')
+            ->once()
+            ->with(3, 100)
+            ->andReturnSelf();
+        Http::shouldReceive('post')
+            ->once()
+            ->with(
+                config('notifier.sms.kavenegar.url').'/'.config('notifier.sms.kavenegar.api-key'),
+                array_merge(
+                    [
+                        'sender' => config('notifier.sms.kavenegar.sender'),
+                        'receptor' => $message->getReceiver()
+                    ],
+                    $message->getMessage()
+                )
+            )
+            ->andReturn(response()->json(['message' => 'mail sent successfully'], Response::HTTP_OK));
+
+        $result = resolve(Notification::class)->send($smsChannel, $message);
 
         $this->assertTrue($result);
     }
