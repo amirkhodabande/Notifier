@@ -19,7 +19,7 @@ class Notification
         }
     }
 
-    public function saveFailedNotification(NotifiableChannelInterface $notifiableChannel, NotifiableData $notifiableData): void
+    private function saveFailedNotification(NotifiableChannelInterface $notifiableChannel, NotifiableData $notifiableData): void
     {
         NotificationModel::create([
             'channel' => $notifiableChannel::class,
