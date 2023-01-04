@@ -11,6 +11,7 @@ class NotifierServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'notification');
 
         if ($this->app->runningInConsole()) {
             $this->commands([

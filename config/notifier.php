@@ -13,7 +13,7 @@ return [
             'url' => 'https://www.mail.com',
         ],
         'laravel-mail' => [
-
+//       it will use the mail driver of your project.
         ]
     ]
 ];
