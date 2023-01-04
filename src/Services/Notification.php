@@ -10,7 +10,13 @@ class Notification
 {
     public function send(NotifiableChannelInterface $notifiableChannel, NotifiableData $notifiableData): bool
     {
-        return $notifiableChannel->send($notifiableData);
+        try {
+            return $notifiableChannel->send($notifiableData);
+        } catch (\Exception $exception) {
+            $this->saveFailedNotification($notifiableChannel, $notifiableData);
+
+            return false;
+        }
     }
 
     public function saveFailedNotification(NotifiableChannelInterface $notifiableChannel, NotifiableData $notifiableData): void
