@@ -25,6 +25,7 @@ class ListFailedNotifications extends Command
             ->get()
             ->map(function ($notification) {
                 $this->info("Id: {$notification->id} - Receiver: {$notification->receiver} - Channel: {$notification->channel}");
+                $this->line('---');
             });
 
         $this->info('Operation finished successfully!');
