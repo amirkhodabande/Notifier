@@ -3,6 +3,7 @@
 namespace Amir\Notifier\Providers;
 
 use Amir\Notifier\Console\ClearFailedNotifications;
+use Amir\Notifier\Console\ListFailedNotifications;
 use Amir\Notifier\Console\RetryFailedNotifications;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +18,7 @@ class NotifierServiceProvider extends ServiceProvider
             $this->commands([
                 ClearFailedNotifications::class,
                 RetryFailedNotifications::class,
+                ListFailedNotifications::class
             ]);
         }
 
