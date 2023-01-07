@@ -16,7 +16,7 @@ use Illuminate\Console\Command;
 
 class RetryFailedNotifications extends Command
 {
-    protected $signature = 'notification:retry-fails {channel?}';
+    protected $signature = 'notification:retry-fails {id?} {channel?}';
 
     protected $description = 'Retry failed notifications.';
 
@@ -30,10 +30,14 @@ class RetryFailedNotifications extends Command
 
     public function handle()
     {
+        $id = $this->argument('id');
         $channel = $this->argument('channel');
 
         $notifications = Notification::query()
-            ->when($channel, function ($query) use ($channel) {
+            ->when($id, function ($query) use ($id) {
+                $query->where('id', $id);
+            })
+            ->when($channel && !$id, function ($query) use ($channel) {
                 $query->where('channel', $channel);
             })
             ->where('status', false);
@@ -45,6 +49,7 @@ class RetryFailedNotifications extends Command
 
             $this->notificationService->send($notifiableChannel, $notifiableData);
 
+            $notification->update(['status' => true]);
             $this->info("Failed notification: {$notification->id} retried!");
         }
 

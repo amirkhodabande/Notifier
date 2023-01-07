@@ -78,4 +78,23 @@ class RetryFailedNotificationsCommandTest extends TestCase
 
         Artisan::call('notification:retry-fails');
     }
+
+    /** @test */
+    public function it_will_retry_the_specified_notification()
+    {
+        $mockedNotificationService = \Mockery::mock(NotificationService::class);
+        $mockedNotificationService->shouldReceive('send')
+            ->once();
+        $this->app->instance(NotificationService::class, $mockedNotificationService);
+
+        factory(Notification::class)->times(2)->create([
+            'channel' => SMSChannel::class,
+            'status' => false,
+            'message' => [
+                'message' => 'test message'
+            ]
+        ]);
+
+        Artisan::call('notification:retry-fails', ['id' => 1]);
+    }
 }
