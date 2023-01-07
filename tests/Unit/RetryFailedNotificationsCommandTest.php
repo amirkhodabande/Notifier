@@ -1,5 +1,6 @@
 <?php
 
+namespace Amir\Notifier\Tests\Unit;
 
 use Amir\Notifier\Channels\CustomMailChannel;
 use Amir\Notifier\Channels\SMSChannel;
