@@ -26,5 +26,9 @@ class NotifierServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../config/notifier.php' => config_path('notifier.php')
         ], 'notifier-config');
+
+        $this->publishes([
+            __DIR__.'/../../database/factories/NotificationFactory.php' => database_path('factories/NotificationFactory.php')
+        ],'notifier-factory');
     }
 }
